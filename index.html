@@ -499,6 +499,104 @@
   }
   .today-divider { height: 0; border-top: 1px dashed rgba(12,12,12,0.2); }
   .home-actions { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+
+  /* Active Booking compound card */
+  .booking-card {
+    background: #fff;
+    border: 1px solid var(--grey-200);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .booking-header {
+    background: linear-gradient(180deg, #E3F1E8 0%, #EAF7EE 100%);
+    padding: 10px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .booking-header .booking-label {
+    font-family: 'Poppins'; font-size: 12px; font-weight: 500;
+    color: #2E7D32; letter-spacing: 0.2px;
+  }
+  .booking-header .booking-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #2E7D32;
+    box-shadow: 0 0 0 0 rgba(46,125,50,0.55);
+    animation: booking-pulse 1.8s ease-out infinite;
+  }
+  @keyframes booking-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(46,125,50,0.55); }
+    70%  { box-shadow: 0 0 0 9px rgba(46,125,50,0); }
+    100% { box-shadow: 0 0 0 0 rgba(46,125,50,0); }
+  }
+  .booking-body {
+    background: #fff;
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .booking-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .booking-row.dates {
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .booking-row .cell {
+    display: flex; flex-direction: column; gap: 3px;
+    min-width: 0;
+  }
+  .booking-row .cell.right { align-items: flex-end; }
+  .booking-row .cell .k {
+    font-family: 'Poppins'; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.96px; color: var(--grey-500);
+  }
+  .booking-row .cell .v {
+    font-family: 'Poppins'; font-size: 15px; font-weight: 600; color: #000;
+    letter-spacing: -0.1px;
+  }
+  .booking-row .arrow {
+    color: rgba(12,12,12,0.2); font-size: 18px;
+  }
+  .booking-hr { height: 0; border-top: 1px dashed rgba(12,12,12,0.2); }
+  .booking-body .btn-primary { margin-top: 2px; }
+
+  /* Standalone Sign Off */
+  .sign-off-btn { margin-top: 14px; }
+
+  /* Past Logs list of booking cards */
+  .past-logs-title { color: #373737 !important; }
+  .past-logs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 8px;
+    margin-top: 4px;
+  }
+  .booking-card.tap {
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .booking-card.tap:hover { background: var(--surface-2); }
+  .booking-card.tap:active { transform: scale(0.995); }
+
+  /* Day Wise Logs section strip */
+  .section-strip {
+    background: #fff;
+    padding: 10px 16px;
+    margin: 22px -16px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-strip-title {
+    font-family: 'Poppins'; font-size: 14px; font-weight: 500; color: var(--ink);
+  }
+  .sort-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 5px; border-radius: 4px;
+    color: var(--green);
+    font-family: 'Poppins'; font-size: 14px; font-weight: 500;
+  }
+  .sort-btn .msr { font-size: 18px; color: var(--green); }
+  .sort-btn:hover { background: rgba(27,133,94,0.06); }
   .section-h {
     font-family: 'Poppins'; font-size: 14px; font-weight: 500;
     color: var(--ink); margin: 22px 0 14px;
@@ -513,7 +611,7 @@
   }
   .log-card .l { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
   .log-card .l .name { font-family: 'Poppins'; font-size: 13px; font-weight: 500; color: var(--ink-2); }
-  .log-card .l .meta { font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 400; color: var(--grey-460); }
+  .log-card .l .meta { font-family: 'Poppins'; font-size: 11px; font-weight: 400; color: var(--grey-460); }
 
   .pill {
     width: 85px; padding: 4px 10px;
@@ -604,6 +702,8 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     z-index: 3;
   }
+  .step-foot-split.no-draft { grid-template-columns: 1fr; }
+  .step-foot-split.no-draft .btn-outline { display: none; }
 
   /* Chips */
   .chips { display: flex; gap: 6px; }
@@ -743,6 +843,46 @@
   .or-divider { display: flex; align-items: center; gap: 8px; padding: 0 16px; }
   .or-divider .line { flex: 1; height: 1.5px; background: rgba(211,211,211,0.6); border-radius: 4px; }
   .or-divider .or { font-family: 'Poppins'; font-size: 14px; line-height: 20px; color: var(--ink-80); }
+
+  /* Sign Off tile grid (2 side-by-side tiles) */
+  .signoff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 4px 16px 8px;
+  }
+  .signoff-tile {
+    background: #fff;
+    border: 1px solid var(--grey-200);
+    border-radius: 16px;
+    padding: 22px 12px 20px;
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-card);
+    min-height: 148px;
+    justify-content: center;
+    transition: background .15s ease, transform .08s ease;
+  }
+  .signoff-tile:hover { background: var(--surface-2); }
+  .signoff-tile:active { transform: scale(0.98); }
+  .signoff-icon {
+    width: 56px; height: 56px;
+    display: grid; place-items: center;
+    color: var(--green);
+  }
+  .signoff-icon .msr {
+    font-size: 46px;
+    font-variation-settings: 'opsz' 24, 'wght' 400, 'FILL' 0, 'GRAD' 0;
+  }
+  .signoff-tile-name {
+    font-family: 'Poppins';
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-align: center;
+    line-height: 1.2;
+  }
 
   /* Upload Receipt modal — uses dashed green buttons */
   .upload-option {
@@ -1274,6 +1414,63 @@
   .preview-trigger .mi { font-size: 14px; color: var(--ink-80); }
   .preview-trigger:hover { background: var(--surface-2); }
 
+  /* Cancel confirmation dialog (centered) */
+  .confirm-card {
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    right: 24px;
+    transform: translate(0, -50%) scale(0.94);
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px 20px 20px;
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    opacity: 0;
+    transition: transform .22s ease, opacity .18s ease;
+  }
+  .modal-backdrop.active .confirm-card {
+    opacity: 1;
+    transform: translate(0, -50%) scale(1);
+  }
+  .confirm-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(182,1,7,0.1);
+    display: grid; place-items: center;
+    color: var(--brand);
+    margin-bottom: 4px;
+  }
+  .confirm-icon .msr { font-size: 30px; }
+  .confirm-title {
+    font-family: 'Poppins';
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: var(--ink);
+    text-align: center;
+  }
+  .confirm-body {
+    font-family: 'Poppins';
+    font-size: 13px;
+    color: var(--grey-500);
+    line-height: 1.45;
+    text-align: center;
+    max-width: 280px;
+    margin-bottom: 6px;
+  }
+  .confirm-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .confirm-actions .btn-outline,
+  .confirm-actions .btn-primary { height: 44px; }
+
   /* PROFILE */
   .profile { background: var(--cream); }
   .profile-body {
@@ -1440,6 +1637,19 @@
       <span class="mi">check_circle</span>
       <span class="msg">Saved as draft</span>
       <a class="action hidden" id="toastAction">Close</a>
+    </div>
+
+    <!-- Cancel confirmation dialog (global) -->
+    <div class="modal-backdrop" id="cancelConfirmModal" onclick="closeModalIfBackdrop(event,'cancelConfirmModal')">
+      <div class="confirm-card">
+        <div class="confirm-icon"><span class="msr">warning</span></div>
+        <div class="confirm-title">Cancel this log?</div>
+        <div class="confirm-body">Your progress will not be saved. Are you sure you want to exit?</div>
+        <div class="confirm-actions">
+          <button class="btn-outline" onclick="closeModal('cancelConfirmModal')">Keep editing</button>
+          <button class="btn-primary" onclick="confirmCancel()">Yes, cancel</button>
+        </div>
+      </div>
     </div>
 
     <!-- All Monthly Entries modal (global) -->
@@ -1618,46 +1828,48 @@
       </div>
       <div class="home-topnav">
         <div class="home-logo">AVIS</div>
-        <div class="avatar">VS</div>
       </div>
       <div class="home-body">
         <div class="eyebrow">Tuesday · 13 May</div>
         <h1 class="greet">Hi, Vinay</h1>
-        <div class="today-card">
-          <div class="today-row">
-            <div class="today-col"><span class="k">Today's Log</span><span class="v">13 MAY</span></div>
-            <div class="today-col"><span class="k">LTR ID</span><span class="v">12-213-121</span></div>
+
+        <div class="booking-card">
+          <div class="booking-header">
+            <span class="booking-label">Active booking</span>
+            <span class="booking-dot"></span>
           </div>
-          <div class="today-divider"></div>
-          <div class="today-row bot">
-            <div class="today-col"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
-            <div class="today-col"><span class="k">Shift Time</span><span class="v">NA</span></div>
+          <div class="booking-body">
+            <div class="booking-row">
+              <div class="cell"><span class="k">LTR Number</span><span class="v">12679</span></div>
+              <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+            </div>
+            <div class="booking-hr"></div>
+            <div class="booking-row dates">
+              <div class="cell"><span class="k">Start Date</span><span class="v">01 May 2026</span></div>
+              <span class="mi arrow">trending_flat</span>
+              <div class="cell right"><span class="k">End Date</span><span class="v">31 May 2026</span></div>
+            </div>
+            <button class="btn-primary" onclick="goSelectDate('add-log')"><span class="msr">edit_note</span>Add Quick Log</button>
           </div>
         </div>
-        <div class="home-actions">
-          <button class="btn-primary" onclick="goSelectDate('add-log')"><span class="msr">edit_note</span>Add Quick Log</button>
-          <button class="btn-outline" onclick="openModal('signoffModal')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 17C5 17 5 15 7 15S9 17 11 17 13 15 15 15 17 17 19 17 21 15 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M5 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <path d="M8 11C8 11 11 4 14 4S17 8 14 11C12 13 9 14 9 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Sign Off
+
+        <button class="btn-outline sign-off-btn" onclick="openModal('signoffModal')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 17C5 17 5 15 7 15S9 17 11 17 13 15 15 15 17 17 19 17 21 15 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 11C8 11 11 4 14 4S17 8 14 11C12 13 9 14 9 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sign Off
+        </button>
+
+        <div class="section-strip">
+          <span class="section-strip-title">Day Wise Logs</span>
+          <button class="sort-btn" onclick="toggleDayLogSort()">
+            <span class="msr">swap_vert</span>Sort
           </button>
         </div>
-        <div class="section-h">Monthly Logs</div>
-        <button class="log-card" onclick="goSelectDate('add-log')">
-          <div class="l"><span class="name">May</span><span class="meta">₹30,140 · 100h 47m</span></div>
-          <span class="pill unsigned"><span class="dot"></span>Unsigned</span>
-        </button>
-        <button class="log-card">
-          <div class="l"><span class="name">April</span><span class="meta">₹30,140 · 100h 47m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card">
-          <div class="l"><span class="name">March</span><span class="meta">₹30,140 · 100h 47m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
+
+        <div id="dayLogsList"></div>
       </div>
       <div class="tabbar">
         <button class="tab active"><span class="msr">home</span><span>Home</span></button>
@@ -1670,23 +1882,20 @@
         <div class="modal-sheet">
           <div class="handle-wrap"><div class="handle"></div></div>
           <div class="modal-header">
-            <span class="t">Select Sign Off Type</span>
+            <span class="t">Select Sign Off</span>
             <button class="x" onclick="closeModal('signoffModal')"><span class="mi">close</span></button>
           </div>
           <div class="modal-hr"></div>
-          <button class="signoff-card" onclick="closeModal('signoffModal'); goSelectDate('signoff')">
-            <span class="ic"><span class="mi">description</span></span>
-            <span class="name">Daily Sign Off</span>
-            <span class="arrow"><span class="mi">chevron_right</span></span>
-          </button>
-          <div class="or-divider">
-            <span class="line"></span><span class="or">or</span><span class="line"></span>
+          <div class="signoff-grid">
+            <button class="signoff-tile" onclick="closeModal('signoffModal'); goto('monthlyPreview')">
+              <span class="signoff-icon"><span class="msr">calendar_month</span></span>
+              <span class="signoff-tile-name">Monthly Sign-Off</span>
+            </button>
+            <button class="signoff-tile" onclick="closeModal('signoffModal'); goSelectDate('signoff')">
+              <span class="signoff-icon"><span class="msr">edit_document</span></span>
+              <span class="signoff-tile-name">Daily Sign-Off</span>
+            </button>
           </div>
-          <button class="signoff-card" onclick="closeModal('signoffModal'); goto('monthlyPreview')">
-            <span class="ic"><span class="mi">calendar_month</span></span>
-            <span class="name">Monthly Sign Off</span>
-            <span class="arrow"><span class="mi">chevron_right</span></span>
-          </button>
         </div>
       </div>
 
@@ -1700,9 +1909,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('home')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('home')"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">May 2025 Log</span><span class="step">STEP 1 OF 5</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" id="selectDateProgress" style="width:28.6%"></div></div>
       <h1 class="step-title" id="selectDateTitle">Select Date</h1>
@@ -1720,9 +1929,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('selectDate')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('selectDate')"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Trip Details</span><span class="step">STEP 2 OF 5</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:51.7%"></div></div>
       <h1 class="step-title">Enter Trip Details</h1>
@@ -1809,9 +2018,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('tripDetails')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('tripDetails')"><span class="msr">arrow_back</span></button>
         <div class="step-mid clickable" onclick="openModal('selectDateModal')"><span class="t">Odometer Details</span><span class="step">STEP 3 OF 5</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:72.9%"></div></div>
       <h1 class="step-title">Enter Odometer Readings</h1>
@@ -2074,9 +2283,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('odometer')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('odometer')"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Expenses Details</span><span class="step">STEP 4 OF 5</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:89.4%"></div></div>
       <h1 class="step-title">Enter Expense Details</h1>
@@ -2135,7 +2344,7 @@
       </div>
       <div class="step-foot-split">
         <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
-        <button class="btn-primary" onclick="goto('preview')">Submit</button>
+        <button class="btn-primary" onclick="previewContext='add-log'; goto('preview')">Submit</button>
       </div>
       <div class="home-indicator"></div>
     </section>
@@ -2147,9 +2356,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('expenses')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="previewBack()"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Preview Details</span><span class="step">STEP 1 OF 2</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:89.6%"></div></div>
       <div class="step-body" style="top:142px">
@@ -2278,7 +2487,7 @@
           </div>
         </div>
       </div>
-      <div class="step-foot-split">
+      <div class="step-foot-split" id="previewFoot">
         <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
         <button class="btn-primary" onclick="signOffMode='daily'; goto('customerOtp')">Submit</button>
       </div>
@@ -2292,9 +2501,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="closeCustomerOtp()"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="closeCustomerOtp()"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Verify OTP</span><span class="step">STEP 2 OF 2</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:89.6%"></div></div>
       <h1 class="step-title">Enter OTP Sent to Customer</h1>
@@ -2334,44 +2543,108 @@
       </div>
       <div class="home-topnav">
         <div class="home-logo">AVIS</div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
       </div>
       <div class="home-body">
-        <div class="eyebrow">History</div>
-        <h1 class="greet" style="color:var(--ink)">Past Logs</h1>
+        <div class="eyebrow">Tuesday · 13 May</div>
+        <h1 class="greet past-logs-title">Past Logs</h1>
 
-        <button class="log-card" onclick="openMonthEntries('May', 2026)">
-          <div class="l"><span class="name">May 2026</span><span class="meta">₹65,140 · 198h 47m</span></div>
-          <span class="pill unsigned"><span class="dot"></span>Unsigned</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Apr', 2026)">
-          <div class="l"><span class="name">April 2026</span><span class="meta">₹62,890 · 192h 30m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Mar', 2026)">
-          <div class="l"><span class="name">March 2026</span><span class="meta">₹58,440 · 184h 15m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Feb', 2026)">
-          <div class="l"><span class="name">February 2026</span><span class="meta">₹54,120 · 168h 50m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Jan', 2026)">
-          <div class="l"><span class="name">January 2026</span><span class="meta">₹60,780 · 196h 22m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Dec', 2025)">
-          <div class="l"><span class="name">December 2025</span><span class="meta">₹52,300 · 172h 10m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Nov', 2025)">
-          <div class="l"><span class="name">November 2025</span><span class="meta">₹56,920 · 182h 45m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
-        <button class="log-card" onclick="openMonthEntries('Oct', 2025)">
-          <div class="l"><span class="name">October 2025</span><span class="meta">₹61,250 · 190h 18m</span></div>
-          <span class="pill signed"><span class="dot"></span>Signed</span>
-        </button>
+        <div class="past-logs-list">
+          <!-- Active booking (May 2026) -->
+          <div class="booking-card tap" onclick="openMonthEntries('May', 2026)">
+            <div class="booking-header">
+              <span class="booking-label">Active booking</span>
+              <span class="booking-dot"></span>
+            </div>
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12679</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 May 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">31 May 2026</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past bookings -->
+          <div class="booking-card tap" onclick="openMonthEntries('Apr', 2026)">
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12678</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 April 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">30 April 2026</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-card tap" onclick="openMonthEntries('Mar', 2026)">
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12677</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 March 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">31 March 2026</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-card tap" onclick="openMonthEntries('Feb', 2026)">
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12676</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 February 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">28 February 2026</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-card tap" onclick="openMonthEntries('Jan', 2026)">
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12675</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 January 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">31 January 2026</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-card tap" onclick="openMonthEntries('Dec', 2025)">
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12674</span></div>
+                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 December 2025</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">31 December 2025</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="tabbar">
@@ -2530,9 +2803,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('home')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('home')"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Preview Details</span><span class="step">STEP 1 OF 2</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:89.6%"></div></div>
       <div class="step-body" style="top:142px">
@@ -2640,9 +2913,9 @@
         <span class="icons"><span class="msr">signal_cellular_alt</span><span class="msr">wifi</span><span class="msr">battery_full</span></span>
       </div>
       <div class="step-topnav">
-        <button class="icon-btn muted" onclick="goto('customerOtp')"><span class="mi">close</span></button>
+        <button class="icon-btn muted" onclick="goto('customerOtp')"><span class="msr">arrow_back</span></button>
         <div class="step-mid"><span class="t">Verify via Signature</span><span class="step">STEP 2 OF 2</span></div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
+        <button class="icon-btn" onclick="askCancel()"><span class="mi">close</span></button>
       </div>
       <div class="progress"><div class="fill" style="width:89.6%"></div></div>
       <h1 class="step-title">Ask Customer for Signature</h1>
@@ -2668,6 +2941,10 @@
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
     const next = document.querySelector(`.screen[data-screen="${name}"]`);
     if (next) next.classList.add('active');
+    if (name === 'preview') {
+      const foot = document.getElementById('previewFoot');
+      if (foot) foot.classList.toggle('no-draft', previewContext === 'signoff');
+    }
     if (name === 'otp') { resetOtp(); startResendCountdown(); }
     if (name === 'customerOtp') { resetCustOtp(); startCustCountdown(); focusCustOtp(); }
     if (name === 'signature') {
@@ -2731,6 +3008,14 @@
     setTimeout(() => goto('login'), 700);
   }
 
+  // Cancel confirm — used by the × button on step screens
+  function askCancel() { openModal('cancelConfirmModal'); }
+  function confirmCancel() {
+    closeModal('cancelConfirmModal');
+    showToast('Cancelled — nothing saved');
+    setTimeout(() => goto('home'), 260);
+  }
+
   // Sign-off flow mode — controls where customerOtp/signature close and post-submit go
   let signOffMode = 'daily'; // 'daily' | 'monthly'
   function startMonthlySignOff() {
@@ -2739,6 +3024,12 @@
   }
   function closeCustomerOtp() {
     goto(signOffMode === 'monthly' ? 'monthlyPreview' : 'preview');
+  }
+
+  // Preview context — how the user reached the Preview screen
+  let previewContext = 'add-log'; // 'add-log' | 'signoff'
+  function previewBack() {
+    goto(previewContext === 'signoff' ? 'selectDate' : 'expenses');
   }
 
   // Select Date — mode-aware list + routing
@@ -2770,6 +3061,7 @@
   };
   function goSelectDate(mode) {
     const cfg = SELECT_DATE_DATA[mode] || SELECT_DATE_DATA['add-log'];
+    previewContext = (mode === 'signoff') ? 'signoff' : 'add-log';
     document.getElementById('selectDateTitle').textContent = cfg.title;
     document.getElementById('selectDateProgress').style.width = cfg.progress;
     const body = document.getElementById('selectDateBody');
@@ -2789,6 +3081,25 @@
     document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
   }
+
+  // Home — Day Wise Logs list
+  let dayLogsAsc = false;
+  const DAY_LOGS = [
+    { name: '10 May · Thursday',  meta: '₹30,140 · 100h 47m', status: 'unsigned', label: 'Unsigned' },
+    { name: '09 May · Wednesday', meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '08 May · Tuesday',   meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+  ];
+  function renderDayLogs() {
+    const list = document.getElementById('dayLogsList');
+    if (!list) return;
+    const rows = dayLogsAsc ? [...DAY_LOGS].reverse() : DAY_LOGS;
+    list.innerHTML = rows.map(r => `
+      <button class="log-card" onclick="showDailyPreview('${r.name}', '${r.status}')">
+        <div class="l"><span class="name">${r.name}</span><span class="meta">${r.meta}</span></div>
+        <span class="pill ${r.status}"><span class="dot"></span>${r.label}</span>
+      </button>`).join('');
+  }
+  function toggleDayLogSort() { dayLogsAsc = !dayLogsAsc; renderDayLogs(); }
 
   // Monthly entries modal — populates per (month, year)
   const MONTH_FULL = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June', Jul:'July', Aug:'August', Sep:'September', Oct:'October', Nov:'November', Dec:'December' };
@@ -3397,6 +3708,9 @@
   }
 
   renderOtp();
+
+  // Pre-render the home Day Wise Logs list
+  renderDayLogs();
 
   // Pre-render the default Select Date list so it never appears blank
   (function initSelectDate() {
