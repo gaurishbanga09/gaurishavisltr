@@ -1071,6 +1071,24 @@
     font-family: 'Poppins'; font-size: 14px; font-weight: 500;
     text-decoration: underline;
   }
+  /* New: single-thumbnail row on reading cards (replaces Image + filename link) */
+  .reading-thumb-row {
+    padding: 10px 16px 6px;
+    display: flex;
+  }
+  .reading-thumb-row .thumb {
+    width: 42px; height: 42px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #444 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .reading-thumb-row .thumb svg {
+    width: 24px; height: 24px;
+    color: rgba(255,255,255,0.55);
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
 
   /* Expense breakup cards */
   .breakup-card {
@@ -3008,6 +3026,21 @@
     setTimeout(() => goto('login'), 700);
   }
 
+  // Transform Preview image cells:
+  //   - reading cards: replace "Image / filename.jpg" row with a single thumbnail
+  //   - expense breakup cards: remove the "Image" label above the thumbs
+  function transformImageCells(root) {
+    root = root || document;
+    root.querySelectorAll('.reading-card .img-link').forEach(link => {
+      const row = link.closest('.row');
+      if (!row) return;
+      const prev = row.previousElementSibling;
+      if (prev && prev.classList.contains('hr')) prev.remove();
+      row.outerHTML = '<div class="reading-thumb-row"><div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div></div>';
+    });
+    root.querySelectorAll('.breakup-card .img-row > .lbl').forEach(lbl => lbl.remove());
+  }
+
   // Cancel confirm — used by the × button on step screens
   function askCancel() { openModal('cancelConfirmModal'); }
   function confirmCancel() {
@@ -3334,7 +3367,7 @@
     const month = dayMatch ? dayMatch[2] : 'May';
     const data = dailyData(day, month);
     const body = document.getElementById('dailyPreviewBody');
-    if (body) body.innerHTML = renderDailyPreviewBody(data);
+    if (body) { body.innerHTML = renderDailyPreviewBody(data); transformImageCells(body); }
     const titleEl = document.getElementById('dailyPreviewTitle');
     if (titleEl) titleEl.textContent = (dateLabel ? dateLabel + ' — ' : '') + 'Preview';
     setTimeout(() => openModal('dailyPreviewDrawer'), 180);
@@ -3711,6 +3744,9 @@
 
   // Pre-render the home Day Wise Logs list
   renderDayLogs();
+
+  // Strip "Image" labels and swap filename links for thumbnails on static Preview cards
+  transformImageCells();
 
   // Pre-render the default Select Date list so it never appears blank
   (function initSelectDate() {
