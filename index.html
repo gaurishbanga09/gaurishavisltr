@@ -1174,6 +1174,21 @@
     color: var(--blue); font-weight: 600; font-size: 14px;
     text-transform: capitalize; padding: 4px 8px;
   }
+  /* Skip OTP link — bypass on Customer OTP screen */
+  .skip-otp-link {
+    display: block;
+    text-align: center;
+    margin-bottom: 12px;
+    padding: 6px 0;
+    color: var(--grey-500);
+    font-family: 'Poppins';
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .skip-otp-link:hover { color: var(--brand); }
 
   /* SIGNATURE */
   .sig-pad {
@@ -1999,7 +2014,7 @@
       </div>
       <div class="step-foot-split">
         <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
-        <button class="btn-primary" onclick="goto('odometer')">Submit</button>
+        <button class="btn-primary" onclick="goto('odometer')">Next</button>
       </div>
 
       <!-- Date & Time picker modal (shared) -->
@@ -2115,7 +2130,7 @@
       </div>
       <div class="step-foot-split">
         <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
-        <button class="btn-primary" onclick="goto('expenses')">Submit</button>
+        <button class="btn-primary" onclick="goto('expenses')">Next</button>
       </div>
 
       <!-- Select Date modal (within Odometer) -->
@@ -2362,7 +2377,7 @@
       </div>
       <div class="step-foot-split">
         <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
-        <button class="btn-primary" onclick="previewContext='add-log'; goto('preview')">Submit</button>
+        <button class="btn-primary" onclick="previewContext='add-log'; goto('preview')">Next</button>
       </div>
       <div class="home-indicator"></div>
     </section>
@@ -2548,6 +2563,7 @@
         </div>
       </div>
       <div class="step-foot-single">
+        <a class="skip-otp-link" onclick="goto('signature')">Skip OTP</a>
         <button class="btn-primary" id="custOtpCta" onclick="goto('signature')" disabled>Verify OTP</button>
       </div>
       <div class="home-indicator"></div>
