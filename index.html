@@ -1425,27 +1425,6 @@
   }
   .modal-sheet.tall .modal-header .download .mi { font-size: 22px; }
 
-  /* Preview trigger pill (on Odometer & similar) */
-  .preview-trigger {
-    position: absolute;
-    top: 142px;
-    right: 16px;
-    height: 28px;
-    padding: 0 12px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid var(--ink-10);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Poppins'; font-size: 11px; font-weight: 600;
-    color: var(--ink-2);
-    box-shadow: var(--shadow-card);
-    z-index: 3;
-    cursor: pointer;
-  }
-  .preview-trigger .mi { font-size: 14px; color: var(--ink-80); }
-  .preview-trigger:hover { background: var(--surface-2); }
 
   /* Cancel confirmation dialog (centered) */
   .confirm-card {
@@ -2057,7 +2036,6 @@
       </div>
       <div class="progress"><div class="fill" style="width:72.9%"></div></div>
       <h1 class="step-title">Enter Odometer Readings</h1>
-      <button class="preview-trigger" onclick="openModal('previewModal')"><span class="mi">visibility</span>Preview</button>
       <div class="step-body" id="odBody">
         <div class="od-card">
           <span class="name">Garage Start</span>
@@ -2163,145 +2141,6 @@
               <div class="l"><span class="name">08 May · Sunday</span><span class="meta">₹2,140 · 11h 47m</span></div>
               <span class="pill locked"><span class="dot"></span>Locked</span>
             </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preview Details modal (bottom-sheet variant of 305:4380) -->
-      <div class="modal-backdrop" id="previewModal" onclick="closeModalIfBackdrop(event,'previewModal')">
-        <div class="modal-sheet tall">
-          <div class="handle-wrap"><div class="handle"></div></div>
-          <div class="modal-header">
-            <span class="t">Preview Details</span>
-            <button class="download"><span class="mi">file_download</span></button>
-            <button class="x" onclick="closeModal('previewModal')"><span class="mi">close</span></button>
-          </div>
-          <div class="modal-hr"></div>
-          <div class="modal-body">
-            <!-- Summary -->
-            <div class="summary-wide">
-              <div class="side">
-                <span class="k">Garage Start</span>
-                <span class="v">13 May<span class="div">|</span>06:30</span>
-              </div>
-              <span class="mi arrow">trending_flat</span>
-              <div class="side right">
-                <span class="k">Garage End</span>
-                <span class="v">13 May<span class="div">|</span>20:30</span>
-              </div>
-            </div>
-            <div class="summary-grid">
-              <div class="summary-cell"><span class="k">Total Distance</span><span class="v">706 km</span></div>
-              <div class="summary-cell"><span class="k">Total Time</span><span class="v">14h 00m</span></div>
-            </div>
-            <div class="summary-grid">
-              <div class="summary-cell"><span class="k">Total Expenses</span><span class="v">₹6,290</span></div>
-              <div class="summary-cell"><span class="k">Number of reciepts</span><span class="v">8</span></div>
-            </div>
-
-            <!-- Log Details -->
-            <div class="preview-section-head" style="margin:0 -16px">
-              <span class="ic"><span class="mi">list_alt</span></span>
-              <span class="label">Log Details</span>
-            </div>
-            <div class="reading-timeline">
-              <div class="timeline-step first">
-                <div class="timeline-marker"></div>
-                <div class="reading-card">
-                  <div class="row">
-                    <div class="col"><span class="k">Garage Start</span><span class="v">13 May<span class="div">|</span>06:30</span></div>
-                    <div class="col right"><span class="k">Reading</span><span class="v">1,21,450 KM</span></div>
-                  </div>
-                  <div class="hr"></div>
-                  <div class="row"><div class="col"><span class="k">Image</span><a class="img-link">Odo_garage_start.jpg</a></div></div>
-                </div>
-              </div>
-              <div class="timeline-step">
-                <div class="timeline-marker"></div>
-                <div class="reading-card">
-                  <div class="row">
-                    <div class="col"><span class="k">Duty Start</span><span class="v">13 May<span class="div">|</span>08:15</span></div>
-                    <div class="col right"><span class="k">Reading</span><span class="v">1,21,612 KM</span></div>
-                  </div>
-                  <div class="hr"></div>
-                  <div class="row"><div class="col"><span class="k">Image</span><a class="img-link">Odo_duty_start.jpg</a></div></div>
-                </div>
-              </div>
-              <div class="timeline-step">
-                <div class="timeline-marker"></div>
-                <div class="reading-card">
-                  <div class="row">
-                    <div class="col"><span class="k">Duty End</span><span class="v">13 May<span class="div">|</span>18:45</span></div>
-                    <div class="col right"><span class="k">Reading</span><span class="v">1,21,978 KM</span></div>
-                  </div>
-                  <div class="hr"></div>
-                  <div class="row"><div class="col"><span class="k">Image</span><a class="img-link">Odo_duty_end.jpg</a></div></div>
-                </div>
-              </div>
-              <div class="timeline-step last">
-                <div class="timeline-marker"></div>
-                <div class="reading-card">
-                  <div class="row">
-                    <div class="col"><span class="k">Garage End</span><span class="v">13 May<span class="div">|</span>20:30</span></div>
-                    <div class="col right"><span class="k">Reading</span><span class="v">1,22,156 KM</span></div>
-                  </div>
-                  <div class="hr"></div>
-                  <div class="row"><div class="col"><span class="k">Image</span><a class="img-link">Odo_garage_end.jpg</a></div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Expense Breakup -->
-            <div class="preview-section-head" style="margin:0 -16px">
-              <span class="ic"><span class="mi">receipt</span></span>
-              <span class="label">Expense Breakup</span>
-              <span class="total">₹6,290</span>
-            </div>
-            <div class="breakup-card">
-              <div class="row">
-                <div class="lhs"><span class="mi">local_parking</span><span class="lbl">Parking</span></div>
-                <span class="amt">₹2,300</span>
-              </div>
-              <div class="hr"></div>
-              <div class="img-row">
-                <span class="lbl">Image</span>
-                <div class="thumbs">
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb more">+1</div>
-                </div>
-              </div>
-            </div>
-            <div class="breakup-card">
-              <div class="row">
-                <div class="lhs"><span class="mi">alt_route</span><span class="lbl">Interstate</span></div>
-                <span class="amt">₹1,800</span>
-              </div>
-              <div class="hr"></div>
-              <div class="img-row">
-                <span class="lbl">Image</span>
-                <div class="thumbs">
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb more">+2</div>
-                </div>
-              </div>
-            </div>
-            <div class="breakup-card">
-              <div class="row">
-                <div class="lhs"><span class="mi">local_gas_station</span><span class="lbl">Fuel</span></div>
-                <span class="amt">₹2,190</span>
-              </div>
-              <div class="hr"></div>
-              <div class="img-row">
-                <span class="lbl">Image</span>
-                <div class="thumbs">
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-                  <div class="thumb more">+3</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -3091,8 +2930,6 @@
         { name: '12 May · Thursday',  status: 'pending',  label: 'Pending' },
         { name: '11 May · Wednesday', status: 'draft',    label: 'In Draft' },
         { name: '10 May · Tuesday',   status: 'unsigned', label: 'Unsigned' },
-        { name: '09 May · Monday',    status: 'signed',   label: 'Signed' },
-        { name: '08 May · Sunday',    status: 'locked',   label: 'Locked' },
       ],
     },
     'signoff': {
