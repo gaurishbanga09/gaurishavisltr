@@ -728,6 +728,7 @@
 
   /* Chips */
   .chips { display: flex; gap: 6px; }
+  .chips.wrap { flex-wrap: wrap; }
   .chip {
     width: 100px; height: 30px;
     border-radius: 999px;
@@ -1069,6 +1070,7 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     margin-bottom: 8px;
   }
+  .summary-grid.full { grid-template-columns: 1fr; }
   .summary-cell {
     background: #fff;
     border-radius: 8px;
@@ -2112,37 +2114,43 @@
         </div>
         <div class="field mt16">
           <span class="label">Garage start time <span class="req">*</span></span>
-          <div class="input" data-dtfield onclick="openPicker(this)">
-            <span class="value">12/05/2026 | 07:55 AM</span>
+          <div class="input" data-dtfield id="tdGarageStart" onclick="openPicker(this)">
+            <span class="value">12/05/2026 | 06:30 AM</span>
             <span class="end-icon"><span class="mi">schedule</span></span>
           </div>
         </div>
         <div class="field mt16">
           <span class="label">Duty start time <span class="req">*</span></span>
-          <div class="input" data-dtfield onclick="openPicker(this)">
-            <span class="value">12/05/2026 | 07:55 AM</span>
+          <div class="input" data-dtfield id="tdDutyStart" onclick="openPicker(this)">
+            <span class="value">12/05/2026 | 08:00 AM</span>
             <span class="end-icon"><span class="mi">schedule</span></span>
           </div>
         </div>
         <div class="field mt16">
           <span class="label">Duty end time <span class="req">*</span></span>
-          <div class="input" data-dtfield onclick="openPicker(this)">
-            <span class="value">12/05/2026 | 07:55 AM</span>
+          <div class="input" data-dtfield id="tdDutyEnd" onclick="openPicker(this)">
+            <span class="value">12/05/2026 | 07:00 PM</span>
             <span class="end-icon"><span class="mi">schedule</span></span>
           </div>
         </div>
         <div class="field mt16">
           <span class="label">Garage return time <span class="req">*</span></span>
-          <div class="input" data-dtfield onclick="openPicker(this)">
-            <span class="value">12/05/2026 | 07:55 AM</span>
+          <div class="input" data-dtfield id="tdGarageEnd" onclick="openPicker(this)">
+            <span class="value">12/05/2026 | 08:30 PM</span>
             <span class="end-icon"><span class="mi">schedule</span></span>
           </div>
         </div>
         <div class="field mt16">
           <span class="label">Weekly Off</span>
           <div class="chips" id="weeklyOffChips">
-            <button class="chip active" data-group="weekly" onclick="selectChip(this)">No off</button>
-            <button class="chip" data-group="weekly" onclick="selectChip(this)">1 day</button>
+            <button class="chip active" data-group="weekly" onclick="selectWeeklyOff(this)">No off</button>
+            <button class="chip" data-group="weekly" onclick="selectWeeklyOff(this)">1 day</button>
+          </div>
+        </div>
+        <div id="weeklyOffDates" style="display:none">
+          <div class="field mt12">
+            <span class="label">Select off day(s)</span>
+            <div class="chips wrap mt8" id="weeklyOffDateChips"></div>
           </div>
         </div>
       </div>
@@ -2412,9 +2420,8 @@
           <div class="summary-cell"><span class="k">Total Distance</span><span class="v">706 km</span></div>
           <div class="summary-cell"><span class="k">Total Time</span><span class="v">14h 00m</span></div>
         </div>
-        <div class="summary-grid">
+        <div class="summary-grid full">
           <div class="summary-cell"><span class="k">Total Expenses</span><span class="v">₹6,290</span></div>
-          <div class="summary-cell"><span class="k">Number of reciepts</span><span class="v">8</span></div>
         </div>
 
         <!-- Log Details -->
@@ -2827,9 +2834,8 @@
           <div class="summary-cell"><span class="k">Total Distance</span><span class="v">24,000 km</span></div>
           <div class="summary-cell"><span class="k">Total Time</span><span class="v">300 Hr</span></div>
         </div>
-        <div class="summary-grid">
+        <div class="summary-grid full">
           <div class="summary-cell"><span class="k">Total Expenses</span><span class="v">₹90,000</span></div>
-          <div class="summary-cell"><span class="k">Number of reciepts</span><span class="v">4</span></div>
         </div>
 
         <!-- Log Details -->
@@ -3140,11 +3146,44 @@
     btn.classList.add('active');
   }
 
+  const DUTY_DEFAULTS = {
+    city: {
+      garageStart: '12/05/2026 | 06:30 AM',
+      dutyStart:   '12/05/2026 | 08:00 AM',
+      dutyEnd:     '12/05/2026 | 07:00 PM',
+      garageEnd:   '12/05/2026 | 08:30 PM',
+    },
+    outstation: {
+      garageStart: '12/05/2026 | 05:30 AM',
+      dutyStart:   '12/05/2026 | 07:00 AM',
+      dutyEnd:     '15/05/2026 | 06:00 PM',
+      garageEnd:   '15/05/2026 | 08:30 PM',
+    }
+  };
+
+  function resetTripForm(isOutstation) {
+    const d = isOutstation ? DUTY_DEFAULTS.outstation : DUTY_DEFAULTS.city;
+    document.querySelector('#tdGarageStart .value').textContent = d.garageStart;
+    document.querySelector('#tdDutyStart .value').textContent   = d.dutyStart;
+    document.querySelector('#tdDutyEnd .value').textContent     = d.dutyEnd;
+    document.querySelector('#tdGarageEnd .value').textContent   = d.garageEnd;
+
+    // Reset weekly off to "No off"
+    const weeklyChips = document.getElementById('weeklyOffChips');
+    weeklyChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    weeklyChips.querySelector('.chip').classList.add('active');
+    document.getElementById('weeklyOffDates').style.display = 'none';
+    document.getElementById('weeklyOffDateChips').innerHTML = '';
+  }
+
   function selectDuty(btn) {
     selectChip(btn);
     const isOutstation = btn.textContent.trim().includes('Outstation');
     const weeklyChips = document.getElementById('weeklyOffChips');
     if (!weeklyChips) return;
+
+    resetTripForm(isOutstation);
+
     const existing2Day = weeklyChips.querySelector('[data-weekly="2"]');
     if (isOutstation && !existing2Day) {
       const btn2 = document.createElement('button');
@@ -3152,14 +3191,55 @@
       btn2.dataset.group = 'weekly';
       btn2.dataset.weekly = '2';
       btn2.textContent = '2 day';
-      btn2.onclick = function() { selectChip(this); };
+      btn2.onclick = function() { selectWeeklyOff(this); };
       weeklyChips.appendChild(btn2);
     } else if (!isOutstation && existing2Day) {
-      if (existing2Day.classList.contains('active')) {
-        weeklyChips.querySelector('.chip').classList.add('active');
-      }
       existing2Day.remove();
     }
+  }
+
+  function selectWeeklyOff(btn) {
+    selectChip(btn);
+    const label = btn.textContent.trim();
+    const maxSelect = label === '1 day' ? 1 : label === '2 day' ? 2 : 0;
+    const container = document.getElementById('weeklyOffDates');
+    const chipsEl = document.getElementById('weeklyOffDateChips');
+    if (maxSelect === 0) { container.style.display = 'none'; return; }
+
+    // Parse garage start & return dates from the first and fourth time inputs
+    const inputs = document.querySelectorAll('[data-screen="tripDetails"] [data-dtfield] .value');
+    function parseDate(str) {
+      const datePart = str.split('|')[0].trim();
+      const parts = datePart.split('/');
+      return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    }
+    let start, end;
+    if (inputs.length >= 4) {
+      start = parseDate(inputs[0].textContent);
+      end = parseDate(inputs[3].textContent);
+    }
+    if (!start || !end || isNaN(start) || isNaN(end) || end < start) return;
+
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    chipsEl.innerHTML = '';
+    let selected = 0;
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const chip = document.createElement('button');
+      chip.className = 'chip';
+      chip.textContent = days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
+      chip.onclick = function() {
+        if (this.classList.contains('active')) {
+          this.classList.remove('active');
+          selected--;
+        } else if (selected < maxSelect) {
+          this.classList.add('active');
+          selected++;
+        }
+      };
+      chipsEl.appendChild(chip);
+    }
+    container.style.display = 'block';
   }
 
   // Home — Day Wise Logs list
@@ -3327,9 +3407,8 @@
         <div class="summary-cell"><span class="k">Total Distance</span><span class="v">${d.distance} km</span></div>
         <div class="summary-cell"><span class="k">Total Time</span><span class="v">${d.totalTime}</span></div>
       </div>
-      <div class="summary-grid">
+      <div class="summary-grid full">
         <div class="summary-cell"><span class="k">Total Expenses</span><span class="v">₹${d.expenses}</span></div>
-        <div class="summary-cell"><span class="k">Number of reciepts</span><span class="v">${d.receipts}</span></div>
       </div>
 
       <div class="preview-section-head" style="margin:0 -16px">
