@@ -560,6 +560,19 @@
   .booking-hr { height: 0; border-top: 1px dashed rgba(12,12,12,0.2); }
   .booking-body .btn-primary { margin-top: 2px; }
 
+  /* Collapsible home top section */
+  .home-top-section {
+    overflow: hidden;
+    max-height: 600px;
+    opacity: 1;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease;
+  }
+  .home-top-section.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
   /* Standalone Sign Off */
   .sign-off-btn { margin-top: 14px; }
 
@@ -585,6 +598,10 @@
     padding: 10px 16px;
     margin: 22px -16px 12px;
     display: flex; align-items: center; justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
   .section-strip-title {
     font-family: 'Poppins'; font-size: 14px; font-weight: 500; color: var(--ink);
@@ -704,6 +721,10 @@
   }
   .step-foot-split.no-draft { grid-template-columns: 1fr; }
   .step-foot-split.no-draft .btn-outline { display: none; }
+  .step-foot-split .preview-edit-btn { display: none; }
+  .step-foot-split.is-signoff .preview-draft-btn { display: none; }
+  .step-foot-split.is-signoff .preview-edit-btn { display: flex; }
+  .step-foot-split.is-signoff { grid-template-columns: 1fr 1fr; }
 
   /* Chips */
   .chips { display: flex; gap: 6px; }
@@ -722,40 +743,109 @@
   .chip.active .mi { color: var(--brand); }
 
   /* Upload area */
+  .upload-field { display: flex; flex-direction: column; gap: 3px; }
   .upload-area {
     border: 1px dashed var(--green-2);
     border-radius: 8px;
     background: var(--green-upload-bg);
-    height: 99px;
     display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 8px;
-    padding: 16px;
+    flex-direction: row; gap: 8px;
+    padding: 6px 16px;
     cursor: pointer;
   }
   .upload-area.has-file {
-    background: #FFF;
-    border-style: solid;
-    flex-direction: row; gap: 12px;
-    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    padding: 0;
     justify-content: flex-start;
+    gap: 6px;
   }
   .upload-area .icon {
-    width: 30px; height: 30px;
-    display: grid; place-items: center;
-    color: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--green); line-height: 1;
   }
-  .upload-area .icon .mi { font-size: 24px; }
+  .upload-area .icon .msr { font-size: 20px; }
   .upload-area .upload-label {
     font-family: 'Poppins';
-    font-style: italic; font-weight: 300;
-    font-size: 14px; color: var(--green);
-    text-transform: capitalize;
+    font-style: normal; font-weight: 600;
+    font-size: 16px; color: var(--green);
+    line-height: 24px;
+  }
+  .upload-hint {
+    font-family: 'Poppins'; font-size: 10px; line-height: 16px;
+    color: rgba(12,12,12,0.7);
   }
   .upload-area .file-name {
     font-family: 'Poppins'; font-size: 13px; font-weight: 500;
     color: var(--ink-2); flex: 1;
   }
   .upload-area .check-icon { color: var(--green); }
+
+  /* Image thumbnails with remove/add buttons */
+  .upload-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 0;
+  }
+  .image-thumb {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #383838 50%, #222 100%);
+    flex-shrink: 0;
+  }
+  .image-thumb .thumb-inner {
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .image-thumb .thumb-inner svg {
+    width: 16px;
+    height: 16px;
+    color: rgba(255,255,255,0.35);
+  }
+  .image-thumb .thumb-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .image-thumb .thumb-overlay .x-icon {
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Material Icons';
+    line-height: 1;
+  }
+  .add-image-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(174,241,216,0.3);
+    border: 1px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .add-image-btn:active { transform: scale(0.95); }
+  .add-image-btn .plus-icon {
+    font-size: 20px;
+    color: var(--green);
+    font-weight: 400;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+  }
 
   /* Odometer card */
   .od-card {
@@ -898,7 +988,7 @@
   }
   .upload-option .mi { font-size: 22px; color: var(--green); }
   .upload-option .upload-option-label {
-    font-family: 'Poppins'; font-style: italic; font-weight: 300; font-size: 14px;
+    font-family: 'Poppins'; font-style: normal; font-weight: 500; font-size: 14px;
     color: var(--green); line-height: 24px;
   }
   .upload-option:active { background: #D9F5E4; }
@@ -1129,6 +1219,56 @@
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
   }
+  .breakup-card .thumb { cursor: pointer; }
+  .breakup-card .thumb:active { opacity: 0.8; }
+
+  /* IMAGE VIEWER DRAWER */
+  .img-viewer-sheet {
+    gap: 0;
+    padding: 10px 0 32px;
+  }
+  .img-viewer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px 12px;
+  }
+  .img-viewer-title { font-family: 'Poppins'; font-size: 16px; font-weight: 600; color: var(--ink); }
+  .img-viewer-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-50); width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-viewer-close .mi { font-size: 22px; }
+  .img-viewer-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 10px;
+    padding: 0 20px;
+    scrollbar-width: none;
+  }
+  .img-viewer-slider::-webkit-scrollbar { display: none; }
+  .img-viewer-slide {
+    flex-shrink: 0;
+    width: calc(100% - 40px);
+    height: 220px;
+    scroll-snap-align: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #3a3a3a 50%, #252525 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .img-viewer-slide svg { width: 56px; height: 56px; color: rgba(255,255,255,0.35); }
+  .img-viewer-counter {
+    text-align: center; margin-top: 10px;
+    font-family: 'Poppins'; font-size: 13px; color: var(--ink-50);
+  }
+  .img-viewer-dots {
+    display: flex; gap: 6px; justify-content: center; margin-top: 10px;
+  }
+  .img-viewer-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(0,0,0,0.18); transition: background 0.2s, width 0.2s;
+  }
+  .img-viewer-dot.active { background: var(--green); width: 18px; border-radius: 3px; }
 
   /* CUSTOMER OTP */
   .cust-otp-row {
@@ -1523,7 +1663,7 @@
     background: var(--grey-350);
   }
   .profile-role .rc {
-    font-family: 'JetBrains Mono'; font-size: 11px;
+    font-family: 'JetBrains Mono'; font-size: 14px;
     color: var(--grey-460);
   }
   .profile-section-h {
@@ -1698,7 +1838,7 @@
       <div class="modal-sheet">
         <div class="handle-wrap"><div class="handle"></div></div>
         <div class="modal-header">
-          <span class="t">Upload the reciept</span>
+          <span class="t">Upload Receipt</span>
           <button class="x" onclick="closeModal('uploadModal')"><span class="mi">close</span></button>
         </div>
         <div class="modal-hr"></div>
@@ -1713,6 +1853,20 @@
           <span class="mi">photo_camera</span>
           <span class="upload-option-label">Take a photo</span>
         </button>
+      </div>
+    </div>
+
+    <!-- IMAGE VIEWER DRAWER -->
+    <div class="modal-backdrop" id="imageViewerDrawer" onclick="closeModalIfBackdrop(event,'imageViewerDrawer')">
+      <div class="modal-sheet img-viewer-sheet">
+        <div class="handle-wrap"><div class="handle"></div></div>
+        <div class="img-viewer-header">
+          <span class="img-viewer-title">Receipt Images</span>
+          <button class="img-viewer-close" onclick="closeModal('imageViewerDrawer')"><span class="mi">close</span></button>
+        </div>
+        <div class="img-viewer-slider" id="imageViewerSlider"></div>
+        <div class="img-viewer-counter" id="imageViewerCounter"></div>
+        <div class="img-viewer-dots" id="imageViewerDots"></div>
       </div>
     </div>
 
@@ -1842,37 +1996,39 @@
         <div class="home-logo">AVIS</div>
       </div>
       <div class="home-body">
-        <div class="eyebrow">Tuesday · 13 May</div>
-        <h1 class="greet">Hi, Vinay</h1>
+        <div class="home-top-section">
+          <div class="eyebrow">Tuesday · 13 May</div>
+          <h1 class="greet">Hi, Vinay</h1>
 
-        <div class="booking-card">
-          <div class="booking-header">
-            <span class="booking-label">Active booking</span>
-            <span class="booking-dot"></span>
-          </div>
-          <div class="booking-body">
-            <div class="booking-row">
-              <div class="cell"><span class="k">LTR Number</span><span class="v">12679</span></div>
-              <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+          <div class="booking-card">
+            <div class="booking-header">
+              <span class="booking-label">Active booking</span>
+              <span class="booking-dot"></span>
             </div>
-            <div class="booking-hr"></div>
-            <div class="booking-row dates">
-              <div class="cell"><span class="k">Start Date</span><span class="v">01 May 2026</span></div>
-              <span class="mi arrow">trending_flat</span>
-              <div class="cell right"><span class="k">End Date</span><span class="v">31 May 2026</span></div>
+            <div class="booking-body">
+              <div class="booking-row">
+                <div class="cell"><span class="k">LTR Number</span><span class="v">12679</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+              </div>
+              <div class="booking-hr"></div>
+              <div class="booking-row dates">
+                <div class="cell"><span class="k">Start Date</span><span class="v">01 May 2026</span></div>
+                <span class="mi arrow">trending_flat</span>
+                <div class="cell right"><span class="k">End Date</span><span class="v">31 May 2026</span></div>
+              </div>
+              <button class="btn-primary" onclick="goSelectDate('add-log')"><span class="msr">edit_note</span>Add Quick Log</button>
             </div>
-            <button class="btn-primary" onclick="goSelectDate('add-log')"><span class="msr">edit_note</span>Add Quick Log</button>
           </div>
+
+          <button class="btn-outline sign-off-btn" onclick="openModal('signoffModal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 17C5 17 5 15 7 15S9 17 11 17 13 15 15 15 17 17 19 17 21 15 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M8 11C8 11 11 4 14 4S17 8 14 11C12 13 9 14 9 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Sign Off
+          </button>
         </div>
-
-        <button class="btn-outline sign-off-btn" onclick="openModal('signoffModal')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 17C5 17 5 15 7 15S9 17 11 17 13 15 15 15 17 17 19 17 21 15 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M5 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M8 11C8 11 11 4 14 4S17 8 14 11C12 13 9 14 9 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Sign Off
-        </button>
 
         <div class="section-strip">
           <span class="section-strip-title">Day Wise Logs</span>
@@ -1885,7 +2041,6 @@
       </div>
       <div class="tabbar">
         <button class="tab active"><span class="msr">home</span><span>Home</span></button>
-        <button class="tab" onclick="goto('pastLogs')"><span class="mi">receipt_long</span><span>Past logs</span></button>
         <button class="tab" onclick="goto('profile')"><span class="mi">person</span><span>Profile</span></button>
       </div>
 
@@ -1949,10 +2104,10 @@
       <h1 class="step-title">Enter Trip Details</h1>
       <div class="step-body">
         <div class="field">
-          <span class="label">Weekly Off</span>
+          <span class="label">Duty</span>
           <div class="chips">
-            <button class="chip active" data-group="weekly" onclick="selectChip(this)">No</button>
-            <button class="chip" data-group="weekly" onclick="selectChip(this)">Yes</button>
+            <button class="chip active" data-group="duty" onclick="selectDuty(this)"><span class="mi">location_city</span>City Local</button>
+            <button class="chip" data-group="duty" onclick="selectDuty(this)"><span class="mi">public</span>Outstation</button>
           </div>
         </div>
         <div class="field mt16">
@@ -1984,10 +2139,10 @@
           </div>
         </div>
         <div class="field mt16">
-          <span class="label">Duty</span>
-          <div class="chips">
-            <button class="chip active" data-group="duty" onclick="selectChip(this)"><span class="mi">location_city</span>City Local</button>
-            <button class="chip" data-group="duty" onclick="selectChip(this)"><span class="mi">public</span>Outstation</button>
+          <span class="label">Weekly Off</span>
+          <div class="chips" id="weeklyOffChips">
+            <button class="chip active" data-group="weekly" onclick="selectChip(this)">No off</button>
+            <button class="chip" data-group="weekly" onclick="selectChip(this)">1 day</button>
           </div>
         </div>
       </div>
@@ -2049,9 +2204,10 @@
           <div class="field">
             <span class="label">Odometer reading</span>
             <div class="upload-area" data-upload="od-1" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">cloud_upload</span></span>
-              <span class="upload-label">Upload Odometer Reading Image</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
         <div class="od-card">
@@ -2066,9 +2222,10 @@
           <div class="field">
             <span class="label">Odometer reading</span>
             <div class="upload-area" data-upload="od-2" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">cloud_upload</span></span>
-              <span class="upload-label">Upload Odometer Reading Image</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
         <div class="od-card">
@@ -2083,9 +2240,10 @@
           <div class="field">
             <span class="label">Odometer reading</span>
             <div class="upload-area" data-upload="od-3" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">cloud_upload</span></span>
-              <span class="upload-label">Upload Odometer Reading Image</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
         <div class="od-card">
@@ -2100,9 +2258,10 @@
           <div class="field">
             <span class="label">Odometer reading</span>
             <div class="upload-area" data-upload="od-4" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">cloud_upload</span></span>
-              <span class="upload-label">Upload Odometer Reading Image</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
       </div>
@@ -2174,9 +2333,10 @@
           <div class="field">
             <span class="label">Parking expense receipt</span>
             <div class="upload-area" data-upload="exp-1" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">receipt_long</span></span>
-              <span class="upload-label">Upload All The Receipts</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
         <div class="exp-card">
@@ -2191,9 +2351,10 @@
           <div class="field">
             <span class="label">Interstate expense receipt</span>
             <div class="upload-area" data-upload="exp-2" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">receipt_long</span></span>
-              <span class="upload-label">Upload All The Receipts</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
         <div class="exp-card">
@@ -2208,9 +2369,10 @@
           <div class="field">
             <span class="label">Fuel expense receipt</span>
             <div class="upload-area" data-upload="exp-3" onclick="openUploadModal(this)">
-              <span class="icon"><span class="mi">receipt_long</span></span>
-              <span class="upload-label">Upload All The Receipts</span>
+              <span class="icon"><span class="msr">upload</span></span>
+              <span class="upload-label">Browse</span>
             </div>
+            <span class="upload-hint">Supported type: JPG, JPEG, PNG. Size: Max 3 MB.</span>
           </div>
         </div>
       </div>
@@ -2322,9 +2484,9 @@
           <div class="img-row">
             <span class="lbl">Image</span>
             <div class="thumbs">
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb more">+1</div>
+              <div class="thumb" onclick="openImageViewer(3,0)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb" onclick="openImageViewer(3,1)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb more" onclick="openImageViewer(3,2)">+1</div>
             </div>
           </div>
         </div>
@@ -2337,9 +2499,9 @@
           <div class="img-row">
             <span class="lbl">Image</span>
             <div class="thumbs">
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb more">+2</div>
+              <div class="thumb" onclick="openImageViewer(4,0)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb" onclick="openImageViewer(4,1)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb more" onclick="openImageViewer(4,2)">+2</div>
             </div>
           </div>
         </div>
@@ -2352,16 +2514,24 @@
           <div class="img-row">
             <span class="lbl">Image</span>
             <div class="thumbs">
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
-              <div class="thumb more">+3</div>
+              <div class="thumb" onclick="openImageViewer(5,0)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb" onclick="openImageViewer(5,1)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div>
+              <div class="thumb more" onclick="openImageViewer(5,2)">+3</div>
             </div>
           </div>
         </div>
       </div>
       <div class="step-foot-split" id="previewFoot">
-        <button class="btn-outline" onclick="saveDraft()">Save as Draft</button>
-        <button class="btn-primary" onclick="signOffMode='daily'; goto('customerOtp')">Submit</button>
+        <button class="btn-outline preview-draft-btn" onclick="saveDraft()">Save as Draft</button>
+        <button class="btn-outline preview-edit-btn" onclick="previewEdit()"><span class="msr" style="font-size:18px;margin-right:4px">edit</span>Edit</button>
+        <button class="btn-primary" onclick="signOffMode='daily'; goto('customerOtp')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px;flex-shrink:0">
+            <path d="M3 17C5 17 5 15 7 15S9 17 11 17 13 15 15 15 17 17 19 17 21 15 21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 11C8 11 11 4 14 4S17 8 14 11C12 13 9 14 9 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sign Off
+        </button>
       </div>
       <div class="home-indicator"></div>
     </section>
@@ -2431,7 +2601,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12679</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2447,7 +2617,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12678</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2462,7 +2632,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12677</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2477,7 +2647,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12676</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2492,7 +2662,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12675</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2507,7 +2677,7 @@
             <div class="booking-body">
               <div class="booking-row">
                 <div class="cell"><span class="k">LTR Number</span><span class="v">12674</span></div>
-                <div class="cell"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
+                <div class="cell right"><span class="k">Vehicle RC Number</span><span class="v">KA-01-AB-1234</span></div>
               </div>
               <div class="booking-hr"></div>
               <div class="booking-row dates">
@@ -2522,7 +2692,6 @@
 
       <div class="tabbar">
         <button class="tab" onclick="goto('home')"><span class="msr">home</span><span>Home</span></button>
-        <button class="tab active"><span class="mi">receipt_long</span><span>Past logs</span></button>
         <button class="tab" onclick="goto('profile')"><span class="mi">person</span><span>Profile</span></button>
       </div>
       <div class="home-indicator"></div>
@@ -2536,15 +2705,12 @@
       </div>
       <div class="home-topnav">
         <div class="home-logo">AVIS</div>
-        <button class="icon-btn"><span class="mi">help_outline</span></button>
       </div>
       <div class="profile-body">
         <div class="profile-hero">
           <div class="avatar-lg">VS</div>
           <h1 class="profile-name">Vinay Sharma</h1>
           <div class="profile-role">
-            <span>Driver</span>
-            <span class="dot"></span>
             <span class="rc">KA-01-AB-1234</span>
           </div>
         </div>
@@ -2559,7 +2725,7 @@
             <span class="k">Email</span>
             <span class="v">vinay.sharma@avis.in</span>
           </div>
-          <div class="info-row mono">
+          <div class="info-row">
             <span class="k">Mobile</span>
             <span class="v">+91 81282 64393</span>
           </div>
@@ -2572,56 +2738,20 @@
             <span class="v">14 March 1989</span>
           </div>
           <div class="info-row">
-            <span class="k">Age</span>
-            <span class="v">36 years</span>
-          </div>
-          <div class="info-row">
-            <span class="k">Blood Group</span>
-            <span class="v">O+</span>
-          </div>
-        </div>
-
-        <div class="profile-section-h"><span class="msr">place</span>Address</div>
-        <div class="info-card">
-          <div class="info-row">
-            <span class="k">Residential Address</span>
+            <span class="k">Address</span>
             <span class="v ml">4B, Brigade Towers,<br/>MG Road, Bangalore,<br/>Karnataka 560001</span>
           </div>
-          <div class="info-row">
-            <span class="k">City</span>
-            <span class="v">Bangalore</span>
-          </div>
-          <div class="info-row">
-            <span class="k">State</span>
-            <span class="v">Karnataka</span>
-          </div>
         </div>
 
-        <div class="profile-section-h"><span class="msr">badge</span>Employment</div>
+        <div class="profile-section-h"><span class="msr">badge</span>License Details</div>
         <div class="info-card">
-          <div class="info-row mono">
-            <span class="k">Employee ID</span>
-            <span class="v">AVS-2147</span>
-          </div>
-          <div class="info-row mono">
-            <span class="k">Assigned Vehicle</span>
-            <span class="v">KA-01-AB-1234</span>
-          </div>
           <div class="info-row">
-            <span class="k">Date Joined</span>
-            <span class="v">02 April 2021</span>
-          </div>
-          <div class="info-row mono">
             <span class="k">Driving License</span>
             <span class="v">KA31-2018-0024651</span>
           </div>
           <div class="info-row">
             <span class="k">License Expiry</span>
             <span class="v">18 August 2032</span>
-          </div>
-          <div class="info-row">
-            <span class="k">Fleet Manager</span>
-            <span class="v">Rohan Iyer</span>
           </div>
         </div>
 
@@ -2633,7 +2763,6 @@
 
       <div class="tabbar">
         <button class="tab" onclick="goto('home')"><span class="msr">home</span><span>Home</span></button>
-        <button class="tab" onclick="goto('pastLogs')"><span class="mi">receipt_long</span><span>Past logs</span></button>
         <button class="tab active"><span class="mi">person</span><span>Profile</span></button>
       </div>
       <div class="home-indicator"></div>
@@ -2816,7 +2945,10 @@
     if (next) next.classList.add('active');
     if (name === 'preview') {
       const foot = document.getElementById('previewFoot');
-      if (foot) foot.classList.toggle('no-draft', previewContext === 'signoff');
+      if (foot) {
+        foot.classList.toggle('no-draft', previewContext === 'signoff');
+        foot.classList.toggle('is-signoff', previewContext === 'signoff');
+      }
     }
     if (name === 'otp') { resetOtp(); startResendCountdown(); }
     if (name === 'customerOtp') { resetCustOtp(); startCustCountdown(); focusCustOtp(); }
@@ -2830,6 +2962,9 @@
         if (s && s.classList.contains('active')) goto('login');
       }, 1600);
     }
+    if (name === 'home') {
+      setTimeout(() => setupHomeScroll(), 50);
+    }
   }
   window._splashT = setTimeout(() => {
     const s = document.querySelector('.screen.splash');
@@ -2840,6 +2975,39 @@
   function openModal(id) { document.getElementById(id).classList.add('active'); }
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
   function closeModalIfBackdrop(e, id) { if (e.target.id === id) closeModal(id); }
+
+  let _imgViewerScrollFn = null;
+  function openImageViewer(total, startIdx) {
+    const slider = document.getElementById('imageViewerSlider');
+    const dotsEl = document.getElementById('imageViewerDots');
+    const counterEl = document.getElementById('imageViewerCounter');
+    const imgSvg = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg>`;
+    if (_imgViewerScrollFn) slider.removeEventListener('scroll', _imgViewerScrollFn);
+    slider.innerHTML = '';
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const slide = document.createElement('div');
+      slide.className = 'img-viewer-slide';
+      slide.innerHTML = imgSvg;
+      slider.appendChild(slide);
+      const dot = document.createElement('div');
+      dot.className = 'img-viewer-dot' + (i === startIdx ? ' active' : '');
+      dotsEl.appendChild(dot);
+    }
+    counterEl.textContent = (startIdx + 1) + ' / ' + total;
+    openModal('imageViewerDrawer');
+    requestAnimationFrame(() => {
+      const slideWidth = slider.querySelector('.img-viewer-slide').offsetWidth + 10;
+      slider.scrollLeft = startIdx * slideWidth;
+    });
+    _imgViewerScrollFn = function() {
+      const slideWidth = slider.querySelector('.img-viewer-slide').offsetWidth + 10;
+      const idx = Math.round(slider.scrollLeft / slideWidth);
+      dotsEl.querySelectorAll('.img-viewer-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      counterEl.textContent = (idx + 1) + ' / ' + total;
+    };
+    slider.addEventListener('scroll', _imgViewerScrollFn, { passive: true });
+  }
 
   // Toast
   let toastTimer = null;
@@ -2891,7 +3059,7 @@
       if (!row) return;
       const prev = row.previousElementSibling;
       if (prev && prev.classList.contains('hr')) prev.remove();
-      row.outerHTML = '<div class="reading-thumb-row"><div class="thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div></div>';
+      row.outerHTML = '<div class="reading-thumb-row"><div class="thumb" onclick="openImageViewer(1,0)" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="1.5"/><path d="M4 16l4-4 3 3 4-5 5 6"/></svg></div></div>';
     });
     root.querySelectorAll('.breakup-card .img-row > .lbl').forEach(lbl => lbl.remove());
   }
@@ -2918,6 +3086,10 @@
   let previewContext = 'add-log'; // 'add-log' | 'signoff'
   function previewBack() {
     goto(previewContext === 'signoff' ? 'selectDate' : 'expenses');
+  }
+  function previewEdit() {
+    previewContext = 'signoff';
+    goto('tripDetails');
   }
 
   // Select Date — mode-aware list + routing
@@ -2968,12 +3140,40 @@
     btn.classList.add('active');
   }
 
+  function selectDuty(btn) {
+    selectChip(btn);
+    const isOutstation = btn.textContent.trim().includes('Outstation');
+    const weeklyChips = document.getElementById('weeklyOffChips');
+    if (!weeklyChips) return;
+    const existing2Day = weeklyChips.querySelector('[data-weekly="2"]');
+    if (isOutstation && !existing2Day) {
+      const btn2 = document.createElement('button');
+      btn2.className = 'chip';
+      btn2.dataset.group = 'weekly';
+      btn2.dataset.weekly = '2';
+      btn2.textContent = '2 day';
+      btn2.onclick = function() { selectChip(this); };
+      weeklyChips.appendChild(btn2);
+    } else if (!isOutstation && existing2Day) {
+      if (existing2Day.classList.contains('active')) {
+        weeklyChips.querySelector('.chip').classList.add('active');
+      }
+      existing2Day.remove();
+    }
+  }
+
   // Home — Day Wise Logs list
   let dayLogsAsc = false;
+  let lastScrollPos = 0;
   const DAY_LOGS = [
     { name: '10 May · Thursday',  meta: '₹30,140 · 100h 47m', status: 'unsigned', label: 'Unsigned' },
     { name: '09 May · Wednesday', meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
     { name: '08 May · Tuesday',   meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '07 May · Monday',    meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '06 May · Sunday',    meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '05 May · Saturday',  meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '04 May · Friday',    meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
+    { name: '03 May · Thursday',  meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
   ];
   function renderDayLogs() {
     const list = document.getElementById('dayLogsList');
@@ -2986,6 +3186,28 @@
       </button>`).join('');
   }
   function toggleDayLogSort() { dayLogsAsc = !dayLogsAsc; renderDayLogs(); }
+
+  // Setup sticky scroll behavior for home page
+  let homeScrollSetup = false;
+  function setupHomeScroll() {
+    const homeBody = document.querySelector('.screen[data-screen="home"] .home-body');
+    const topSection = document.querySelector('.screen[data-screen="home"] .home-top-section');
+    if (!homeBody || !topSection) return;
+    if (homeScrollSetup) return;
+    homeScrollSetup = true;
+    lastScrollPos = 0;
+
+    homeBody.addEventListener('scroll', () => {
+      const scrollPos = homeBody.scrollTop;
+      // Collapse top section when scrolled down past 40px
+      if (scrollPos > 40) {
+        topSection.classList.add('collapsed');
+      } else {
+        topSection.classList.remove('collapsed');
+      }
+      lastScrollPos = scrollPos;
+    }, { passive: true });
+  }
 
   // Monthly entries modal — populates per (month, year)
   const MONTH_FULL = { Jan:'January', Feb:'February', Mar:'March', Apr:'April', May:'May', Jun:'June', Jul:'July', Aug:'August', Sep:'September', Oct:'October', Nov:'November', Dec:'December' };
@@ -3442,21 +3664,91 @@
   // ============== Upload Receipt modal ==============
   let activeUploadEl = null;
   let captureReturnTo = null;
+  const uploadedImages = {}; // { 'od-1': ['IMG_001.jpg'], 'exp-1': ['receipt.png'] }
+
   function openUploadModal(el) {
     activeUploadEl = el;
     openModal('uploadModal');
   }
+
+  function renderUploadImages(el) {
+    const uploadId = el.dataset.upload;
+    if (!uploadId) return;
+
+    const images = uploadedImages[uploadId] || [];
+    let html = '<div class="upload-images">';
+
+    images.forEach((img, idx) => {
+      html += `
+        <div class="image-thumb">
+          <div class="thumb-inner">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <button class="thumb-overlay" onclick="removeImage('${uploadId}', ${idx})">
+            <span class="x-icon">close</span>
+          </button>
+        </div>
+      `;
+    });
+
+    html += `
+      <button class="add-image-btn" onclick="openUploadModalForId('${uploadId}')">
+        <span class="plus-icon">+</span>
+      </button>
+    `;
+
+    html += '</div>';
+
+    el.innerHTML = html;
+  }
+
   function applyUploadResult(source) {
     if (!activeUploadEl) return;
-    activeUploadEl.classList.add('has-file');
+
+    const uploadId = activeUploadEl.dataset.upload;
+    if (!uploadId) return;
+
+    if (!uploadedImages[uploadId]) {
+      uploadedImages[uploadId] = [];
+    }
+
     const isCam = source === 'camera';
-    activeUploadEl.innerHTML = `
-      <span class="icon"><span class="mi">${isCam ? 'photo_camera' : 'image'}</span></span>
-      <span class="file-name">${isCam ? 'IMG_2026_0513_0142.jpg' : 'Odometer_image1.png'}</span>
-      <span class="mi check-icon">check_circle</span>
-    `;
+    const imageName = isCam ? 'IMG_2026_0513_0142.jpg' : 'Odometer_image1.png';
+
+    uploadedImages[uploadId].push({ name: imageName, isCam });
+
+    activeUploadEl.classList.add('has-file');
+    renderUploadImages(activeUploadEl);
     activeUploadEl = null;
   }
+
+  function removeImage(uploadId, index) {
+    if (uploadedImages[uploadId]) {
+      uploadedImages[uploadId].splice(index, 1);
+      const el = document.querySelector(`[data-upload="${uploadId}"]`);
+      if (el) {
+        if (uploadedImages[uploadId].length === 0) {
+          el.classList.remove('has-file');
+          el.innerHTML = `
+            <span class="icon"><span class="msr">upload</span></span>
+            <span class="upload-label">Browse</span>
+          `;
+        } else {
+          renderUploadImages(el);
+        }
+      }
+    }
+  }
+
+  function openUploadModalForId(uploadId) {
+    activeUploadEl = document.querySelector(`[data-upload="${uploadId}"]`);
+    openModal('uploadModal');
+  }
+
   function finishUpload(source) {
     closeModal('uploadModal');
     if (source === 'camera') {
@@ -3468,6 +3760,7 @@
       applyUploadResult(source);
     }
   }
+
   function goCapture(action) {
     if (action === 'shoot') {
       applyUploadResult('camera');
