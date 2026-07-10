@@ -626,9 +626,14 @@
     gap: 12px; box-shadow: var(--shadow-card);
     margin-bottom: 12px; width: 100%;
   }
-  .log-card .l { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+  .log-card .l { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; text-align: left; }
   .log-card .l .name { font-family: 'Poppins'; font-size: 13px; font-weight: 500; color: var(--ink-2); }
   .log-card .l .meta { font-family: 'Poppins'; font-size: 11px; font-weight: 400; color: var(--grey-460); }
+  #previewWeeklyOff.has-off { color: var(--green); text-decoration: underline; cursor: pointer; }
+  .weekly-off-date-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 10px; padding: 12px 14px; }
+  .weekly-off-date-row .msr { color: var(--green); font-size: 20px; }
+  .weekly-off-date-row span.date { font-family: 'Poppins'; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+  .log-outstation-tag { display: inline-flex; align-items: center; align-self: flex-start; width: fit-content; font-family: 'Poppins'; font-size: 9px; font-weight: 600; color: #7c3aed; background: rgba(124,58,237,0.1); border-radius: 4px; padding: 1px 6px; margin-top: 0; letter-spacing: 0.02em; }
 
   .pill {
     width: 85px; padding: 4px 10px;
@@ -1822,6 +1827,17 @@
     </div>
 
     <!-- Daily Preview drawer (global — mirrors 331:5641) -->
+    <div class="modal-backdrop" id="weeklyOffTray" onclick="closeModalIfBackdrop(event,'weeklyOffTray')">
+      <div class="modal-sheet" style="padding: 20px 20px 32px;">
+        <div class="handle-wrap"><div class="handle"></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span style="font-family:'Poppins';font-size:15px;font-weight:600;color:var(--ink-2);">Weekly Off Days</span>
+          <button class="x" onclick="closeModal('weeklyOffTray')"><span class="mi">close</span></button>
+        </div>
+        <div id="weeklyOffTrayDates" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+
     <div class="modal-backdrop" id="dailyPreviewDrawer" onclick="closeModalIfBackdrop(event,'dailyPreviewDrawer')">
       <div class="modal-sheet tall">
         <div class="handle-wrap"><div class="handle"></div></div>
@@ -2408,13 +2424,17 @@
         <div class="summary-wide">
           <div class="side">
             <span class="k">Garage Start</span>
-            <span class="v">13 May<span class="div">|</span>06:30</span>
+            <span class="v" id="previewGarageStart">13 May<span class="div">|</span>06:30</span>
           </div>
           <span class="mi arrow">trending_flat</span>
           <div class="side right">
             <span class="k">Garage End</span>
-            <span class="v">13 May<span class="div">|</span>20:30</span>
+            <span class="v" id="previewGarageEnd">13 May<span class="div">|</span>20:30</span>
           </div>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-cell"><span class="k">Duty Type</span><span class="v" id="previewDutyType">City Local</span></div>
+          <div class="summary-cell"><span class="k">Weekly Off</span><span class="v" id="previewWeeklyOff" onclick="openWeeklyOffTray()">No off</span></div>
         </div>
         <div class="summary-grid">
           <div class="summary-cell"><span class="k">Total Distance</span><span class="v">706 km</span></div>
@@ -2746,7 +2766,7 @@
           </div>
           <div class="info-row">
             <span class="k">Address</span>
-            <span class="v ml">4B, Brigade Towers,<br/>MG Road, Bangalore,<br/>Karnataka 560001</span>
+            <span class="v ml">4B, Brigade Towers, MG Road, Bangalore, Karnataka 560001</span>
           </div>
         </div>
 
@@ -2829,6 +2849,10 @@
             <span class="k">Month End</span>
             <span class="v">31 May<span class="div">|</span>16:00</span>
           </div>
+        </div>
+        <div class="summary-grid">
+          <div class="summary-cell"><span class="k">Duty Type</span><span class="v">City Local</span></div>
+          <div class="summary-cell"><span class="k">Weekly Off</span><span class="v">No off</span></div>
         </div>
         <div class="summary-grid">
           <div class="summary-cell"><span class="k">Total Distance</span><span class="v">24,000 km</span></div>
@@ -2955,6 +2979,17 @@
         foot.classList.toggle('no-draft', previewContext === 'signoff');
         foot.classList.toggle('is-signoff', previewContext === 'signoff');
       }
+      const isOutstation = previewContext === 'outstation';
+      const gs = document.getElementById('previewGarageStart');
+      const ge = document.getElementById('previewGarageEnd');
+      const dt = document.getElementById('previewDutyType');
+      const wo = document.getElementById('previewWeeklyOff');
+      if (gs) gs.innerHTML = isOutstation ? '12 May<span class="div">|</span>05:30' : '13 May<span class="div">|</span>06:30';
+      if (ge) ge.innerHTML = isOutstation ? '15 May<span class="div">|</span>08:30' : '13 May<span class="div">|</span>20:30';
+      if (dt) dt.textContent = isOutstation ? 'Outstation' : 'City Local';
+      const woText = isOutstation ? '1 day' : 'No off';
+      if (wo) { wo.textContent = woText; wo.classList.toggle('has-off', woText !== 'No off'); }
+      window._previewOffDates = isOutstation ? ['13 May · Monday'] : [];
     }
     if (name === 'otp') { resetOtp(); startResendCountdown(); }
     if (name === 'customerOtp') { resetCustOtp(); startCustCountdown(); focusCustOtp(); }
@@ -2981,6 +3016,17 @@
   function openModal(id) { document.getElementById(id).classList.add('active'); }
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
   function closeModalIfBackdrop(e, id) { if (e.target.id === id) closeModal(id); }
+  function openWeeklyOffTray() {
+    const dates = window._previewOffDates || [];
+    if (!dates.length) return;
+    const container = document.getElementById('weeklyOffTrayDates');
+    container.innerHTML = dates.map(d => `
+      <div class="weekly-off-date-row">
+        <span class="msr">event_busy</span>
+        <span class="date">${d}</span>
+      </div>`).join('');
+    openModal('weeklyOffTray');
+  }
 
   let _imgViewerScrollFn = null;
   function openImageViewer(total, startIdx) {
@@ -3105,7 +3151,7 @@
       progress: '28.6%',
       target: 'tripDetails',
       entries: [
-        { name: '12 May · Thursday',  status: 'pending',  label: 'Pending' },
+        { name: '12 May – 15 May', status: 'draft',  label: 'In Draft', outstation: true },
         { name: '11 May · Wednesday', status: 'draft',    label: 'In Draft' },
         { name: '10 May · Tuesday',   status: 'unsigned', label: 'Unsigned' },
       ],
@@ -3130,13 +3176,18 @@
     document.getElementById('selectDateProgress').style.width = cfg.progress;
     const body = document.getElementById('selectDateBody');
     body.innerHTML = cfg.entries.map(e => `
-      <button class="log-card" onclick="goto('${cfg.target}')">
-        <div class="l"><span class="name">${e.name}</span><span class="meta">₹2,140 · 11h 47m</span></div>
+      <button class="log-card" onclick="${e.outstation ? "previewContext='outstation'; selectDutyOutstation(); goto('tripDetails')" : `goto('${cfg.target}')`}">
+        <div class="l"><span class="name">${e.name}</span><span class="meta">${e.outstation ? '₹6,290 · 86h 00m' : '₹2,140 · 11h 47m'}</span>${e.outstation ? '<span class="log-outstation-tag">Outstation</span>' : ''}</div>
         <span class="pill ${e.status}"><span class="dot"></span>${e.label}</span>
       </button>`).join('');
     const cta = document.getElementById('selectDateContinue');
     cta.onclick = () => goto(cfg.target);
     goto('selectDate');
+  }
+
+  function selectDutyOutstation() {
+    const outstationBtn = document.querySelectorAll('[data-group="duty"]')[1];
+    if (outstationBtn) selectDuty(outstationBtn);
   }
 
   // Chip selection
@@ -3246,6 +3297,7 @@
   let dayLogsAsc = false;
   let lastScrollPos = 0;
   const DAY_LOGS = [
+    { name: '12 May – 15 May', meta: '₹6,290 · 86h 00m', status: 'unsigned', label: 'Unsigned', outstation: true },
     { name: '10 May · Thursday',  meta: '₹30,140 · 100h 47m', status: 'unsigned', label: 'Unsigned' },
     { name: '09 May · Wednesday', meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
     { name: '08 May · Tuesday',   meta: '₹30,140 · 100h 47m', status: 'signed',   label: 'Signed' },
@@ -3260,8 +3312,8 @@
     if (!list) return;
     const rows = dayLogsAsc ? [...DAY_LOGS].reverse() : DAY_LOGS;
     list.innerHTML = rows.map(r => `
-      <button class="log-card" onclick="showDailyPreview('${r.name}', '${r.status}')">
-        <div class="l"><span class="name">${r.name}</span><span class="meta">${r.meta}</span></div>
+      <button class="log-card" onclick="${r.outstation ? "previewContext='outstation'; goto('preview')" : `showDailyPreview('${r.name}', '${r.status}')`}">
+        <div class="l"><span class="name">${r.name}</span><span class="meta">${r.meta}</span>${r.outstation ? '<span class="log-outstation-tag">Outstation</span>' : ''}</div>
         <span class="pill ${r.status}"><span class="dot"></span>${r.label}</span>
       </button>`).join('');
   }
@@ -3402,6 +3454,10 @@
           <span class="k">Garage End</span>
           <span class="v">${d.day} ${d.monthShort}<span class="div">|</span>${d.garageEnd}</span>
         </div>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-cell"><span class="k">Duty Type</span><span class="v">City Local</span></div>
+        <div class="summary-cell"><span class="k">Weekly Off</span><span class="v">No off</span></div>
       </div>
       <div class="summary-grid">
         <div class="summary-cell"><span class="k">Total Distance</span><span class="v">${d.distance} km</span></div>
