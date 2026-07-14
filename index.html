@@ -630,6 +630,22 @@
   .log-card .l .name { font-family: 'Poppins'; font-size: 13px; font-weight: 500; color: var(--ink-2); }
   .log-card .l .meta { font-family: 'Poppins'; font-size: 11px; font-weight: 400; color: var(--grey-460); }
   #previewWeeklyOff.has-off { color: var(--green); text-decoration: underline; cursor: pointer; }
+  .wo-dropdown { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 14px; cursor: pointer; margin-top: 8px; min-height: 48px; }
+  .wo-dropdown-value { font-family: 'Poppins'; font-size: 14px; color: var(--ink-2); flex: 1; }
+  .wo-dropdown-value.placeholder { color: var(--grey-460); }
+  .wo-dropdown-arrow { font-size: 20px; color: var(--grey-460); transition: transform 0.2s; }
+  .wo-dropdown-arrow.open { transform: rotate(180deg); }
+  .wo-dropdown-list { display: none; background: #fff; border: 1.5px solid var(--border); border-radius: 10px; margin-top: 4px; overflow: hidden; }
+  .wo-dropdown-list.open { display: block; }
+  .wo-dropdown-item { display: flex; align-items: center; gap: 12px; padding: 13px 14px; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .wo-dropdown-item:last-child { border-bottom: none; }
+  .wo-dropdown-item .wo-cb { width: 20px; height: 20px; border-radius: 6px; border: 2px solid #ccc; position: relative; flex-shrink: 0; transition: all 0.15s; background: #fff; }
+  .wo-dropdown-item.selected { background: rgba(139,0,0,0.04); }
+  .wo-dropdown-item.selected .wo-cb { background: var(--brand); border-color: var(--brand); }
+  .wo-dropdown-item.selected .wo-cb::after { content: ''; position: absolute; left: 5px; top: 2px; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg); }
+  .wo-dropdown-item .wo-date { font-family: 'Poppins'; font-size: 14px; color: var(--ink-2); }
+  .wo-dropdown-item.selected .wo-date { font-weight: 500; color: var(--brand); }
+  .wo-dropdown-item.disabled { opacity: 0.38; pointer-events: none; }
   .weekly-off-date-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border-radius: 10px; padding: 12px 14px; }
   .weekly-off-date-row .msr { color: var(--green); font-size: 20px; }
   .weekly-off-date-row span.date { font-family: 'Poppins'; font-size: 14px; font-weight: 500; color: var(--ink-2); }
@@ -2159,14 +2175,18 @@
         <div class="field mt16">
           <span class="label">Weekly Off</span>
           <div class="chips" id="weeklyOffChips">
-            <button class="chip active" data-group="weekly" onclick="selectWeeklyOff(this)">No off</button>
-            <button class="chip" data-group="weekly" onclick="selectWeeklyOff(this)">1 day</button>
+            <button class="chip active" data-group="weekly" onclick="selectWeeklyOff(this)">No</button>
+            <button class="chip" data-group="weekly" onclick="selectWeeklyOff(this)">Yes</button>
           </div>
         </div>
         <div id="weeklyOffDates" style="display:none">
-          <div class="field mt12">
-            <span class="label">Select off day(s)</span>
-            <div class="chips wrap mt8" id="weeklyOffDateChips"></div>
+          <div class="field mt16" style="margin-top:24px">
+            <span class="label">Select off day(s) <span style="font-weight:400;color:var(--grey-460);">max 2</span></span>
+            <div class="wo-dropdown" id="woDropdown" onclick="toggleWoDropdown()">
+              <span class="wo-dropdown-value" id="woDropdownValue">Select dates</span>
+              <span class="mi wo-dropdown-arrow" id="woDropdownArrow">keyboard_arrow_down</span>
+            </div>
+            <div class="wo-dropdown-list" id="woDropdownList"></div>
           </div>
         </div>
       </div>
@@ -2976,8 +2996,9 @@
     if (name === 'preview') {
       const foot = document.getElementById('previewFoot');
       if (foot) {
+        const showEditSignoff = previewContext === 'signoff' || previewContext === 'unsigned';
         foot.classList.toggle('no-draft', previewContext === 'signoff');
-        foot.classList.toggle('is-signoff', previewContext === 'signoff');
+        foot.classList.toggle('is-signoff', showEditSignoff);
       }
       const isOutstation = previewContext === 'outstation';
       const gs = document.getElementById('previewGarageStart');
@@ -3135,12 +3156,13 @@
   }
 
   // Preview context — how the user reached the Preview screen
-  let previewContext = 'add-log'; // 'add-log' | 'signoff'
+  let previewContext = 'add-log'; // 'add-log' | 'signoff' | 'outstation' | 'unsigned'
   function previewBack() {
-    goto(previewContext === 'signoff' ? 'selectDate' : 'expenses');
+    if (previewContext === 'unsigned' || previewContext === 'outstation') goto('home');
+    else if (previewContext === 'signoff') goto('selectDate');
+    else goto('expenses');
   }
   function previewEdit() {
-    previewContext = 'signoff';
     goto('tripDetails');
   }
 
@@ -3219,12 +3241,17 @@
     document.querySelector('#tdDutyEnd .value').textContent     = d.dutyEnd;
     document.querySelector('#tdGarageEnd .value').textContent   = d.garageEnd;
 
-    // Reset weekly off to "No off"
+    // Reset weekly off to "No"
     const weeklyChips = document.getElementById('weeklyOffChips');
     weeklyChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     weeklyChips.querySelector('.chip').classList.add('active');
     document.getElementById('weeklyOffDates').style.display = 'none';
-    document.getElementById('weeklyOffDateChips').innerHTML = '';
+    const woDL = document.getElementById('woDropdownList');
+    const woDV = document.getElementById('woDropdownValue');
+    const woArr = document.getElementById('woDropdownArrow');
+    if (woDL) { woDL.innerHTML = ''; woDL.classList.remove('open'); }
+    if (woDV) { woDV.textContent = 'Select dates'; woDV.classList.add('placeholder'); }
+    if (woArr) woArr.classList.remove('open');
   }
 
   function selectDuty(btn) {
@@ -3235,27 +3262,15 @@
 
     resetTripForm(isOutstation);
 
-    const existing2Day = weeklyChips.querySelector('[data-weekly="2"]');
-    if (isOutstation && !existing2Day) {
-      const btn2 = document.createElement('button');
-      btn2.className = 'chip';
-      btn2.dataset.group = 'weekly';
-      btn2.dataset.weekly = '2';
-      btn2.textContent = '2 day';
-      btn2.onclick = function() { selectWeeklyOff(this); };
-      weeklyChips.appendChild(btn2);
-    } else if (!isOutstation && existing2Day) {
-      existing2Day.remove();
-    }
   }
 
   function selectWeeklyOff(btn) {
     selectChip(btn);
-    const label = btn.textContent.trim();
-    const maxSelect = label === '1 day' ? 1 : label === '2 day' ? 2 : 0;
+    const isYes = btn.textContent.trim() === 'Yes';
     const container = document.getElementById('weeklyOffDates');
     const chipsEl = document.getElementById('weeklyOffDateChips');
-    if (maxSelect === 0) { container.style.display = 'none'; return; }
+    if (!isYes) { container.style.display = 'none'; chipsEl.innerHTML = ''; return; }
+    const maxSelect = 2;
 
     // Parse garage start & return dates from the first and fourth time inputs
     const inputs = document.querySelectorAll('[data-screen="tripDetails"] [data-dtfield] .value');
@@ -3271,26 +3286,54 @@
     }
     if (!start || !end || isNaN(start) || isNaN(end) || end < start) return;
 
-    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    chipsEl.innerHTML = '';
-    let selected = 0;
+    const list = document.getElementById('woDropdownList');
+    const valueEl = document.getElementById('woDropdownValue');
+    list.innerHTML = '';
+    valueEl.textContent = 'Select dates';
+    valueEl.classList.add('placeholder');
+    let selectedDates = [];
+
+    function updateDropdownValue() {
+      if (selectedDates.length === 0) {
+        valueEl.textContent = 'Select dates';
+        valueEl.classList.add('placeholder');
+      } else {
+        valueEl.textContent = selectedDates.join(', ');
+        valueEl.classList.remove('placeholder');
+      }
+    }
+
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const chip = document.createElement('button');
-      chip.className = 'chip';
-      chip.textContent = days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
-      chip.onclick = function() {
-        if (this.classList.contains('active')) {
-          this.classList.remove('active');
-          selected--;
-        } else if (selected < maxSelect) {
-          this.classList.add('active');
-          selected++;
+      const label = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()];
+      const item = document.createElement('div');
+      item.className = 'wo-dropdown-item';
+      item.innerHTML = `<div class="wo-cb"></div><span class="wo-date">${label}</span>`;
+      item.onclick = function() {
+        if (this.classList.contains('selected')) {
+          this.classList.remove('selected');
+          selectedDates = selectedDates.filter(x => x !== label);
+        } else if (selectedDates.length < maxSelect) {
+          this.classList.add('selected');
+          selectedDates.push(label);
         }
+        updateDropdownValue();
+        // Disable unselected items when max reached
+        list.querySelectorAll('.wo-dropdown-item:not(.selected)').forEach(el => {
+          el.classList.toggle('disabled', selectedDates.length >= maxSelect);
+        });
       };
-      chipsEl.appendChild(chip);
+      list.appendChild(item);
     }
     container.style.display = 'block';
+  }
+
+  function toggleWoDropdown() {
+    const list = document.getElementById('woDropdownList');
+    const arrow = document.getElementById('woDropdownArrow');
+    const open = list.classList.toggle('open');
+    arrow.classList.toggle('open', open);
   }
 
   // Home — Day Wise Logs list
@@ -3312,7 +3355,7 @@
     if (!list) return;
     const rows = dayLogsAsc ? [...DAY_LOGS].reverse() : DAY_LOGS;
     list.innerHTML = rows.map(r => `
-      <button class="log-card" onclick="${r.outstation ? "previewContext='outstation'; goto('preview')" : `showDailyPreview('${r.name}', '${r.status}')`}">
+      <button class="log-card" onclick="${r.outstation ? "previewContext='outstation'; goto('preview')" : r.status === 'unsigned' ? `previewContext='unsigned'; goto('preview')` : `showDailyPreview('${r.name}', '${r.status}')`}">
         <div class="l"><span class="name">${r.name}</span><span class="meta">${r.meta}</span>${r.outstation ? '<span class="log-outstation-tag">Outstation</span>' : ''}</div>
         <span class="pill ${r.status}"><span class="dot"></span>${r.label}</span>
       </button>`).join('');
